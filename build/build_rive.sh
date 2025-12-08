@@ -127,7 +127,7 @@ else
         case "$1" in
             "debug") RIVE_CONFIG="${RIVE_CONFIG:-debug}" ;;
             "release") RIVE_CONFIG="${RIVE_CONFIG:-release}" ;;
-            "xros") 
+            "xros")
                 RIVE_OS="${RIVE_OS:-ios}"
                 RIVE_VARIANT="${RIVE_VARIANT:-xros}"
                 ;;
@@ -136,7 +136,7 @@ else
                 RIVE_VARIANT="${RIVE_VARIANT:-xrsimulator}"
                 RIVE_ARCH="${RIVE_ARCH:-universal}" # The simulator requires universal builds.
                 ;;
-            "appletvos") 
+            "appletvos")
                 RIVE_OS="${RIVE_OS:-ios}"
                 RIVE_VARIANT="${RIVE_VARIANT:-appletvos}"
                 ;;
@@ -221,27 +221,6 @@ fi
 
 mkdir -p "$SCRIPT_DIR/dependencies"
 pushd "$SCRIPT_DIR/dependencies" > /dev/null
-
-# Add premake5 to the $PATH.
-# Install premake5 to a specific directory based on our current tag, to make
-# sure we rebuild if this script runs for a different tag.
-RIVE_PREMAKE_TAG="${RIVE_PREMAKE_TAG:-v5.0.0-beta7}"
-PREMAKE_INSTALL_DIR="$SCRIPT_DIR/dependencies/premake-core/bin/${RIVE_PREMAKE_TAG}_release"
-if [ ! -f "$PREMAKE_INSTALL_DIR/premake5" ]; then
-    echo Building Premake...
-    rm -fr premake-core # Wipe out a prior checkout if it exists without a premake5 binary.
-    git clone --depth 1 --branch $RIVE_PREMAKE_TAG https://github.com/premake/premake-core.git
-    pushd premake-core > /dev/null
-    case "$HOST_MACHINE" in
-        mac_arm64) make -f Bootstrap.mak osx PLATFORM=ARM ;;
-        mac_x64) make -f Bootstrap.mak osx ;;
-        windows) ./Bootstrap.bat ;;
-        *) make -f Bootstrap.mak linux ;;
-    esac
-    cp -r bin/release $PREMAKE_INSTALL_DIR
-    popd > /dev/null
-fi
-export PATH="$PREMAKE_INSTALL_DIR:$PATH"
 
 # Add Rive's build scripts to the premake path.
 export PREMAKE_PATH="$SCRIPT_DIR"
