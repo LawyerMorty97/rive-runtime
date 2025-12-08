@@ -39,7 +39,7 @@ newoption({
     description = 'Choose which toolchain to build with',
     allowed = {
         { 'clang', 'Build with Clang' },
-        { 'msc', 'Build with the Microsoft C/C++ compiler' },
+        { 'msc',   'Build with the Microsoft C/C++ compiler' },
     },
     default = 'clang',
 })
@@ -55,8 +55,8 @@ newoption({
         { 'arm' },
         { 'arm64' },
         { 'universal', '"fat" library on apple platforms' },
-        { 'wasm', 'emscripten targeting web assembly' },
-        { 'js', 'emscripten targeting javascript' },
+        { 'wasm',      'emscripten targeting web assembly' },
+        { 'js',        'emscripten targeting javascript' },
     },
     default = 'host',
 })
@@ -78,13 +78,13 @@ newoption({
     value = 'type',
     description = 'Choose a particular variant to build',
     allowed = {
-        { 'system', 'Builds the static library for the provided system' },
-        { 'emulator', 'Builds for a simulator for the provided system' },
-        { 'xros', 'Builds for Apple Vision Pro' },
-        { 'xrsimulator', 'Builds for Apple Vision Pro simulator' },
-        { 'appletvos', 'Builds for Apple TV' },
+        { 'system',           'Builds the static library for the provided system' },
+        { 'emulator',         'Builds for a simulator for the provided system' },
+        { 'xros',             'Builds for Apple Vision Pro' },
+        { 'xrsimulator',      'Builds for Apple Vision Pro simulator' },
+        { 'appletvos',        'Builds for Apple TV' },
         { 'appletvsimulator', 'Builds for Apple TV simulator' },
-        { 'maccatalyst', 'Builds for Mac Catalyst' },
+        { 'maccatalyst',      'Builds for Mac Catalyst' },
         {
             'runtime',
             'Build the static library specifically targeting our runtimes',
@@ -143,7 +143,7 @@ if _OPTIONS['with_optick'] then
     defines({ 'RIVE_OPTICK' })
     RIVE_OPTICK_URL = 'bombomby/optick'
     RIVE_OPTICK_VERSION = '1.4.0.0'
-end 
+end
 
 location(RIVE_BUILD_OUT)
 targetdir(RIVE_BUILD_OUT)
@@ -223,19 +223,20 @@ newoption({
     trigger = 'windows_runtime',
     description = 'Choose whether to use staticruntime on/off/default',
     allowed = {
-        { 'default', 'Use default runtime' },
-        { 'static', 'Use static runtime' },
-        { 'dynamic', 'Use dynamic runtime' },
-        { 'dynamic_debug', 'Use dynamic runtime force debug' },
+        { 'default',         'Use default runtime' },
+        { 'static',          'Use static runtime' },
+        { 'dynamic',         'Use dynamic runtime' },
+        { 'dynamic_debug',   'Use dynamic runtime force debug' },
         { 'dynamic_release', 'Use dynamic runtime force release' },
     },
-    default = 'default',
+    default = 'static',
 })
 
 newoption({
     trigger = 'toolsversion',
     value = 'msvc_toolsversion',
-    description = 'specify the version of the compiler tool. On windows thats the msvc version which affects both clang and msvc outputs.',
+    description =
+    'specify the version of the compiler tool. On windows thats the msvc version which affects both clang and msvc outputs.',
     default = 'latest',
 })
 
@@ -408,7 +409,7 @@ filter({})
 -- use it directly, we will include more things than are strictly necessary.
 --
 -- Instead, make an alias that we can use instead that we set manually based on calls to system()
--- Additionally, premake deprecated `--os=android` which is why the custom system() call is 
+-- Additionally, premake deprecated `--os=android` which is why the custom system() call is
 -- needed in the first place (otherwise the build script would just be passing it in)
 rive_target_os = os.target()
 
@@ -453,19 +454,19 @@ if _OPTIONS['for_android'] then
         print('To install via Android Studio:')
         print('  - Settings > SDK Manager > SDK Tools')
         print('  - Check "Show Package Details" at the bottom')
-        print('  - Select '..NDK_LONG_VERSION_STRING..' under "NDK (Side by side)"')
+        print('  - Select ' .. NDK_LONG_VERSION_STRING .. ' under "NDK (Side by side)"')
         print('  - Note the value of "Android SDK Location"')
         print()
         print('Then set the ANDROID_NDK environment variable:')
-        print('  - export ANDROID_NDK="<Android SDK Location>/ndk/'..NDK_LONG_VERSION_STRING..'"')
+        print('  - export ANDROID_NDK="<Android SDK Location>/ndk/' .. NDK_LONG_VERSION_STRING .. '"')
         print()
         error(
             'Unsupported Android NDK\n  ndk: '
-                .. ndk
-                .. '\n  version: '
-                .. ndk_version
-                .. '\n  expected: '
-                .. EXPECTED_NDK_VERSION
+            .. ndk
+            .. '\n  version: '
+            .. ndk_version
+            .. '\n  expected: '
+            .. EXPECTED_NDK_VERSION
         )
     end
 
