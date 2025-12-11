@@ -61,8 +61,8 @@ rive_renderer_appletvsimulator_metallib: $(OUT)/rive_renderer_appletvsimulator.m
 ## rules for each intermediate file.
 $(OUT)/macosx/rive_pls_macosx.metallib: $(MINIFY_GLSL_OUTPUTS) $(METAL_INPUTS) $(DRAW_COMBINATIONS_METAL) | $(OUT)/macosx/.
 	$(foreach FILE, $(METAL_INPUTS), \
-		xcrun -sdk macosx metal -std=macos-metal2.3 \
-		-mmacosx-version-min=10.0 \
+		xcrun -sdk macosx metal -std=metal3.0 \
+		-mmacosx-version-min=11.0 \
 		-I$(OUT) -ffast-math -ffp-contract=fast -fpreserve-invariance -fvisibility=hidden \
 		-c $(FILE) \
 		-o $(patsubst metal/%.metal, $(OUT)/macosx/%.air, $(FILE));)
@@ -73,7 +73,7 @@ $(OUT)/rive_pls_macosx.metallib.c: $(OUT)/macosx/rive_pls_macosx.metallib
 		$(OUT)/macosx/rive_pls_macosx.metallib \
 		$(OUT)/rive_pls_macosx.metallib.c
 
-$(OUT)/ios/rive_pls_ios.metallib: $(MINIFY_GLSL_OUTPUTS) $(METAL_INPUTS) $(DRAW_COMBINATIONS_METAL) | $(OUT)/ios/. 
+$(OUT)/ios/rive_pls_ios.metallib: $(MINIFY_GLSL_OUTPUTS) $(METAL_INPUTS) $(DRAW_COMBINATIONS_METAL) | $(OUT)/ios/.
 	$(foreach FILE, $(METAL_INPUTS), \
 		xcrun -sdk iphoneos metal -std=ios-metal2.2 \
 		-I$(OUT) -mios-version-min=13 -ffast-math -ffp-contract=fast -fpreserve-invariance \
@@ -198,7 +198,7 @@ spirv_is_clockwise = $(findstring clockwise,$1)
 ##   --merge-return
 ##   --inline-entry-points-exhaustive
 ## without those, the pipelines on the affected devices will fail to link. However, we can do
-## more optimizations while we're here, which 
+## more optimizations while we're here, which
 
 ## Vertex shaders can be optimized using the standard "optimize for performance" option
 ## with no known issues
@@ -331,7 +331,7 @@ define make_spirv_rules
     )
 endef
 
-## All .main/vert/frag files should build 
+## All .main/vert/frag files should build
 $(eval $(call make_spirv_rules, $(SPIRV_STANDARD_INPUTS), vert frag))
 
 ## Each of the specialized SPIRV lists have their own associated rules
