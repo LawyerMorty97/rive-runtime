@@ -35,13 +35,14 @@ if(WIN32)
     set(RIVE_BUILD_SCRIPT build_rive.bat)
     set(RIVE_BUILD_FLAGS --windows_runtime=static)
 elseif(APPLE)
-    set(RIVE_RENDERER_LIB ${RIVE_LIB_DIR}/rive.a)
-    set(RIVE_DECODERS_LIB ${RIVE_LIB_DIR}/rive_decoders.a)
-    set(RIVE_PLS_RENDERER_LIB ${RIVE_LIB_DIR}/rive_pls_renderer.a)
-    set(RIVE_HARFBUZZ_LIB ${RIVE_LIB_DIR}/rive_harfbuzz.a)
-    set(RIVE_SHEENBIDI_LIB ${RIVE_LIB_DIR}/rive_sheenbidi.a)
-    set(RIVE_YOGA_LIB ${RIVE_LIB_DIR}/rive_yoga.a)
+    set(RIVE_RENDERER_LIB ${RIVE_LIB_DIR}/librive.a)
+    set(RIVE_DECODERS_LIB ${RIVE_LIB_DIR}/librive_decoders.a)
+    set(RIVE_PLS_RENDERER_LIB ${RIVE_LIB_DIR}/librive_pls_renderer.a)
+    set(RIVE_HARFBUZZ_LIB ${RIVE_LIB_DIR}/librive_harfbuzz.a)
+    set(RIVE_SHEENBIDI_LIB ${RIVE_LIB_DIR}/librive_sheenbidi.a)
+    set(RIVE_YOGA_LIB ${RIVE_LIB_DIR}/librive_yoga.a)
     set(RIVE_BUILD_SCRIPT build_rive.sh)
+    set(RIVE_BUILD_FLAGS --with-rtti)
 endif()
 
 # Step 0 (windows only): Run `/build/setup_windows_dev.bat`
@@ -50,6 +51,11 @@ if(WIN32)
         COMMAND ${CMAKE_COMMAND} -E echo "[Rive] Preconfiguring rive-runtime..."
         COMMAND setup_windows_dev.bat
         COMMAND powershell -ExecutionPolicy Bypass -File "${RIVE_BUILD_DIR}/setup_windows_dev.ps1"
+        WORKING_DIRECTORY ${RIVE_BUILD_DIR}
+    )
+else()
+    add_custom_target(rive_prebuild ALL
+        COMMAND ${CMAKE_COMMAND} -E echo "[Rive] Skipping preconfiguring of rive-runtime..."
         WORKING_DIRECTORY ${RIVE_BUILD_DIR}
     )
 endif()
@@ -65,7 +71,7 @@ add_custom_command(
         ${RIVE_YOGA_LIB}
     COMMAND ${CMAKE_COMMAND} -E echo "[Rive] Building rive-runtime - config: ${RIVE_CFG}"
     # COMMAND cmd /c ".\\${RIVE_BUILD_SCRIPT} ${RIVE_BUILD_FLAGS}"
-    COMMAND sh ../build/build_rive.sh ${RIVE_CFG} ${RIVE_BUILD_FLAGS}
+    COMMAND sh ../build/build_rive.sh ${RIVE_CFG} ${RIVE_BUILD_FLAGS} clean
     WORKING_DIRECTORY ${RIVE_RENDERER_DIR}
     DEPENDS rive_prebuild
 )
